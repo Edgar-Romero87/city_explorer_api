@@ -33,7 +33,21 @@ function Location(searchQuery, obj) {
   this.longitude = obj.lon;
 }
 
+app.get('/weather', (request, response) => {
+  try {
+    let weatherArray = [];
+    let geoData = require('./data/weather.json')
+    geoData.data.forEach(element => {
+      new Weather(element, weatherArray);
+    })
+    response.status(200).send(weatherArray);
 
+  } catch (err) {
+    console.log('ERROR', err);
+    response.status(500).send('sorry, we messed up');
+  }
+
+})
 function Weather(obj, array) {
   this.forecast = obj.weather.description;
   this.time = obj.valid_date;
