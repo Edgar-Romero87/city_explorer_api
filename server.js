@@ -10,17 +10,8 @@ const cors = require('cors');
 app.use(cors());
 // bring in the PORT by using process.env.variable name
 const PORT = process.env.PORT || 3001;
-// app.get('/', (request, response) => {
-//   console.log('hello out there');
-//   response.status(200).send('I like pizza');
-// });
-// app.get('/bananas', (request, response) => {
-//   console.log('it is Monday');
-//   response.status(200).send('tell me about it');
-// });
-// app.get('/pizza', (request, response) => {
-//   response.status(200).send('I am on the pizza route');
-// });
+
+
 app.get('/location', (request, response) => {
   try {
     // query: { city: 'seattle' },
@@ -42,23 +33,6 @@ function Location(searchQuery, obj) {
   this.longitude = obj.lon;
 }
 
-//weather constructor function
-app.get('/weather', (request, response) => {
-  try {
-
-    let weatherArray = [];
-    let geoData = require('./data/weather.json');
-    geoData.data.forEach(element => {
-      new Weather(element , weatherArray);
-    })
-
-    response.status(200).send(weatherArray);
-
-  } catch (err) {
-    console.log('ERROR', err);
-    response.status(500).send('sorry, we messed up');
-  }
-})
 
 function Weather(obj, array) {
   this.forecast = obj.weather.description;
