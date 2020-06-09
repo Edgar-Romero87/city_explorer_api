@@ -1,17 +1,21 @@
 'use strict';
 // express library sets up our server
 const express = require('express');
+
 // initalizes our express library into our variable called app
 const app = express();
+
 // dotenv lets us get our secrets from our .env file
 require('dotenv').config();
+
 // bodyguard of our server - tells who is ok to send data to
 const cors = require('cors');
 app.use(cors());
+
 // bring in the PORT by using process.env.variable name
 const PORT = process.env.PORT || 3001;
 
-
+//LOCATION
 app.get('/location', (request, response) => {
   try {
     // query: { city: 'seattle' },
@@ -32,7 +36,7 @@ function Location(searchQuery, obj) {
   this.latitude = obj.lat;
   this.longitude = obj.lon;
 }
-
+//WEATHER
 app.get('/weather', (request, response) => {
   try {
     let weatherArray = [];
