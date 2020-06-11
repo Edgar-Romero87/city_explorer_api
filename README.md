@@ -16,7 +16,7 @@ Actual time needed to complete:4:20.
 # Project name: City Explorer
 
 Author: Edgar Romero
-Version: 1.0.0 
+Version: 1.4.0 
 
 ## Overview
 In labs 6 through 9, you will be building a stand-alone back end which will interact with a static front end. You will request data from a total of six third-party APIs, modify the data as needed, and send the data to the client to be displayed in the browser. In labs 8 and 9, you will be persisting data in a SQL database.
@@ -38,8 +38,9 @@ The dependencies needed for today's lab include: express, cors, and dotenv. Note
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples: -->
 
 - 06-08-2020 6:20pm Application now has a fully-functional express server, with a GET - route for the location and weather resource.
-- 06-08-2020 5pm Aplication now has a function Get route Trails.
-- 06-09-2020 8pm Aplication now has API calls to query search  data.
+- 06-08-2020 5pm Application now has a function Get route Trails.
+- 06-09-2020 8pm Application now has API calls to query search  data.
+- 06-09-2020 8:30pm Application now has persistence SQL database.
 
 <!-- CLASS-07 LAB06 -->
 
@@ -57,14 +58,15 @@ Actual time needed to complete:3:30.
 
 <!-- CLASS-07 LAB07 -->
 
+![whiteBoard-class08](image/screenshot-2.jpeg)
 Number and name of feature: Lab 07 (day THREE)
 
 Estimate of time needed to complete: 3 hours
 
-Start time: 
+Start time: 2:30pm
 
-Finish time: 
+Finish time: 8:30pm
 
-Actual time needed to complete:3:30.
+Actual time needed to complete: 6 hours.
 
 
