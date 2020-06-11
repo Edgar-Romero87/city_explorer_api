@@ -1,39 +1,57 @@
-
-
-/* eslint-disable no-undef */
 'use strict';
-// express library sets up our server
-const express = require('express');
 
-// initalizes our express library into our variable called app
-const app = express();
-
-//SuperAgent
 const superagent = require('superagent');
-
-// dotenv lets us get our secrets from our .env file
-require('dotenv').config();
-
-// bodyguard of our server - tells who is ok to send data to
+const express = require('express');
 const cors = require('cors');
+const pg = require('pg');
+const app = express();
 app.use(cors());
+
+require('dotenv').config();
 
 // bring in the PORT by using process.env.variable name
 const PORT = process.env.PORT || 3001;
 
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => console.error(err));
 
-//LOCATION
+
+/////LOCATION
 app.get('/location', (request, response) => {
-  let city = request.query.city;
-  let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEO_DATA_API_KEY}&q=${city}&format=json`;
 
-  superagent.get(url)
-    .then(resultsFromSuperAgent => {
-      let finalObj = new Location(city, resultsFromSuperAgent.body[0]);
+  try {
+    let city = request.query.city;
+    let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEO_DATA_API_KEY}&q=${city}&format=json`;
+    let safeValue = [city];
+    let sqlQuery = 'SELECT * FROM locations WHERE search_query LIKE ($1);';
 
-      response.status(200).send(finalObj);
-    })
 
+    client.query(sqlQuery, safeValue)
+      .then(sqlResults => {
+        console.log(city)
+        if (sqlResults.rowCount !== 0) {
+          console.log(sqlResults);
+          response.status(200).send(sqlResults.rows[0]);
+        } else {
+          superagent.get(url)
+            .then(resultsFromSuperAgent => {
+              console.log('api route', resultsFromSuperAgent.body)
+              let finalObj = new Location(city, resultsFromSuperAgent.body[0]);
+              response.status(200).send(finalObj);
+              console.log(Location);
+              let sqlQuery = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);';
+              console.log('im here');
+              let safeValue = [finalObj.search_query, finalObj.formatted_query, finalObj.latitude, finalObj.longitude];
+              client.query(sqlQuery, safeValue)
+                .then(()=>{})
+            })
+            .catch(err => console.log(err))
+        }
+      })
+  } catch (err) {
+    console.log('Error', err);
+    response.status(500).send('your call cannot be completed at this time');
+  }
 })
 
 function Location(searchQuery, obj){
@@ -111,6 +129,9 @@ app.get('*', (request, response) => {
 
 
 // turn on the lights - move into the house - start the server
-app.listen(PORT, () => {
-  console.log(`listening on ${PORT}`);
-});
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`listening on ${PORT}`);
+    })
+  })

@@ -37,8 +37,9 @@ The dependencies needed for today's lab include: express, cors, and dotenv. Note
 ## Change log
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples: -->
 
-06-08-2020 6:20pm Application now has a fully-functional express server, with a GET route for the location and weather resource.
-
+- 06-08-2020 6:20pm Application now has a fully-functional express server, with a GET - route for the location and weather resource.
+- 06-08-2020 5pm Aplication now has a function Get route Trails.
+- 06-09-2020 8pm Aplication now has API calls to query search  data.
 
 <!-- CLASS-07 LAB06 -->
 
@@ -50,6 +51,20 @@ Estimate of time needed to complete: 4 hours
 
 Start time: 2:30pm
 
+Finish time: 6pm
+
+Actual time needed to complete:3:30.
+
+<!-- CLASS-07 LAB07 -->
+
+Number and name of feature: Lab 07 (day THREE)
+
+Estimate of time needed to complete: 3 hours
+
+Start time: 
+
 Finish time: 
 
-Actual time needed to complete:
+Actual time needed to complete:3:30.
+
+
