@@ -2,17 +2,6 @@
 Lab: 06 - Node, npm, and Express
 
 
-Number and name of feature: Lab 06 (day one)
-
-Estimate of time needed to complete: 4 hours
-
-Start time: 2:30pm
-
-Finish time: 6:50pm
-
-Actual time needed to complete:4:20.
-
-
 # Project name: City Explorer
 
 Author: Edgar Romero
@@ -40,13 +29,25 @@ The dependencies needed for today's lab include: express, cors, and dotenv. Note
 - 06-08-2020 6:20pm Application now has a fully-functional express server, with a GET - route for the location and weather resource.
 - 06-08-2020 5pm Application now has a function Get route Trails.
 - 06-09-2020 8pm Application now has API calls to query search  data.
-- 06-09-2020 8:30pm Application now has persistence SQL database.
+- 06-10-2020 8:30pm Application now has persistence SQL database.
+- 06-11-2020 6:10pm Application now has Movies DB API.
+
+
+Number and name of feature: Lab 06 (day one) 06-08-2020
+
+Estimate of time needed to complete: 4 hours
+
+Start time: 2:30pm
+
+Finish time: 6:50pm
+
+Actual time needed to complete:4:20.
 
 <!-- CLASS-07 LAB06 -->
 
 ![whiteBoard-class07](image/lab06class7.jpeg) 
 
-Number and name of feature: Lab 06 (day TWO)
+Number and name of feature: Lab 07 (day TWO) 06-09-2020
 
 Estimate of time needed to complete: 4 hours
 
@@ -56,10 +57,10 @@ Finish time: 6pm
 
 Actual time needed to complete:3:30.
 
-<!-- CLASS-07 LAB07 -->
+<!-- CLASS-08 LAB08 -->
 
 ![whiteBoard-class08](image/screenshot-2.jpeg)
-Number and name of feature: Lab 07 (day THREE)
+Number and name of feature: Lab 08 (day THREE) 06-10-2020
 
 Estimate of time needed to complete: 3 hours
 
@@ -69,4 +70,17 @@ Finish time: 8:30pm
 
 Actual time needed to complete: 6 hours.
 
+
+<!-- CLASS-09 LAB09 -->
+
+
+Number and name of feature: Lab 09 (day FOUR) 06-11-2020
+
+Estimate of time needed to complete: 3 hours
+
+Start time: 2:30pm
+
+Finish time: 6pm
+
+Actual time needed to complete: 3:30.
 
