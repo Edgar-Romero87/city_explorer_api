@@ -74,7 +74,7 @@ Actual time needed to complete: 6 hours.
 <!-- CLASS-09 LAB09 -->
 
 
-Number and name of feature: Lab 09 (day FOUR) 06-11-2020
+Number and name of feature: Lab 09- add Movies DB (day FOUR) 06-11-2020
 
 Estimate of time needed to complete: 3 hours
 
@@ -83,4 +83,15 @@ Start time: 2:30pm
 Finish time: 6pm
 
 Actual time needed to complete: 3:30.
+
+Number and name of feature: Lab 09  add Yelp DB (day FOUR) 06-11-2020
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 6:30pm
+
+Finish time: 8:40
+
+Actual time needed to complete: 2:10.
+
 
