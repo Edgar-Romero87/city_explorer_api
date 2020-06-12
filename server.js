@@ -1,58 +1,87 @@
 'use strict';
 
-const superagent = require('superagent');
-const express = require('express');
-const cors = require('cors');
-const pg = require('pg');
+const superagent = require('superagent'); //Import superagent-connect us to get data from APIs
+
+const express = require('express'); //Import express-this is our server
 const app = express();
+
+const cors = require('cors');//Bodyguard splitting things one to other
+const pg = require('pg');
 app.use(cors());
 
-require('dotenv').config();
+require('dotenv').config(); //Import and configure the .env file
 
 // bring in the PORT by using process.env.variable name
 const PORT = process.env.PORT || 3001;
 
 const client = new pg.Client(process.env.DATABASE_URL);
-client.on('error', err => console.error(err));
+client.on('error', err => console.error(err));//
 
-
+app.get('/location', locationHandler);
+app.get('/movies', moviesHandler);
+// app.get('/yelp', yelpHandler);
 /////LOCATION
-app.get('/location', (request, response) => {
+// app.get('/location', (request, response) => {
 
-  try {
-    let city = request.query.city;
-    let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEO_DATA_API_KEY}&q=${city}&format=json`;
-    let safeValue = [city];
-    let sqlQuery = 'SELECT * FROM locations WHERE search_query LIKE ($1);';
+//   try {
+//     let city = request.query.city;
+//     let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEO_DATA_API_KEY}&q=${city}&format=json`;
+//     let safeValue = [city];
+//     let sqlQuery = 'SELECT * FROM locations WHERE search_query LIKE ($1);';
+
+//     //query the database to see if the city is already there
+//     client.query(sqlQuery, safeValue)
+//       .then(sqlResults => {
+//         console.log(city)
+//         if (sqlResults.rowCount !== 0) {
+//           console.log('I found the city in the database! Sending to the front end');
+//           response.status(200).send(sqlResults.rows[0]);
+//         } else {
+//           superagent.get(url)
+//             .then(resultsFromSuperAgent => {
+//               console.log('api route', resultsFromSuperAgent.body)
+//               let finalObj = new Location(city, resultsFromSuperAgent.body[0]);
+//               response.status(200).send(finalObj);
+//               console.log(Location);
+//               let sqlQuery = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);';
+//               console.log('im here');
+//               let safeValue = [finalObj.search_query, finalObj.formatted_query, finalObj.latitude, finalObj.longitude];
+//               client.query(sqlQuery, safeValue)
+//                 .then(()=>{})
+//             })
+//             .catch(err => console.log(err))
+//         }
+//       })
+//   } catch (err) {
+//     console.log('Error', err);
+//     response.status(500).send('your call cannot be completed at this time');
+//   }
+// })
 
 
-    client.query(sqlQuery, safeValue)
-      .then(sqlResults => {
-        console.log(city)
-        if (sqlResults.rowCount !== 0) {
-          console.log(sqlResults);
-          response.status(200).send(sqlResults.rows[0]);
-        } else {
-          superagent.get(url)
-            .then(resultsFromSuperAgent => {
-              console.log('api route', resultsFromSuperAgent.body)
-              let finalObj = new Location(city, resultsFromSuperAgent.body[0]);
-              response.status(200).send(finalObj);
-              console.log(Location);
-              let sqlQuery = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);';
-              console.log('im here');
-              let safeValue = [finalObj.search_query, finalObj.formatted_query, finalObj.latitude, finalObj.longitude];
-              client.query(sqlQuery, safeValue)
-                .then(()=>{})
-            })
-            .catch(err => console.log(err))
-        }
-      })
-  } catch (err) {
-    console.log('Error', err);
-    response.status(500).send('your call cannot be completed at this time');
+///////LOCATION REFACTORED//////
+function locationHandler(request,response){
+  let city = request.query.city;
+  let url = 'http://us1.locationiq.com/v1/search.php';
+  // let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEO_DATA_API_KEY}&q=${city}&format=json`;
+
+  const queryParams = {
+    key: process.env.GEO_DATA_API_KEY,
+    q: city,
+    format: 'json',
+    limit: 1
   }
-})
+  superagent.get(url)
+    .query(queryParams)
+    .then(data => {
+      console.log('results from superagent', data.body)
+      const geoData = data.body[0]; //we are taking the first one...
+      const location = new Location(city, geoData);
+
+      response.status(200).send(location);
+    }).catch()
+
+}
 
 function Location(searchQuery, obj){
   this.search_query = searchQuery;
@@ -60,6 +89,74 @@ function Location(searchQuery, obj){
   this.latitude = obj.lat;
   this.longitude = obj.lon;
 }
+
+/////////MOVIES//////
+function moviesHandler(request, response){
+  let city = request.query.search_query;
+  let moviesURL = 'https://api.themoviedb.org/3/search/movie';
+  // let url = 'https://api.themoviedb.org/3/movie/550?api_key=452fb2a236b62653e48a2e2280fdde82'
+
+  const queryParams = {
+    api_key: process.env.MOVIE_API_KEY,
+    query: city,
+    // format: 'json',
+    limit: 5,
+  }
+  superagent.get(moviesURL)
+    .query (queryParams)
+    .then(data => {
+      let moviesArray = data.body.results.map(value => new Movies(value));
+
+      response.status(200).send(moviesArray);
+    }).catch(err=> console.log(err))
+
+}
+
+function Movies(obj){
+  this.title = obj.title;
+  this.overview = obj.overview;
+  this.average_votes = obj.average_votes;
+  this.total_votes = obj.total_votes;
+  this.image_url = `https://image.tmdb.org/t/p/w500/${obj.poster_path}`;
+  this.popularity = obj.popularity;
+  this.released_on = obj.released_on;
+}
+
+
+/////YELP////
+// function yelpHandler(request, response) {
+//   console.log('this is pur yelp route', request.query);
+
+//   const page = request.query.page;
+//   const numPerPage = 5
+//   const start = (number -1) * numPerPage; //this allows us to start with the 1-5 and then 5-10, and then 10-15...  etc...etc
+
+//   const url = '';
+
+//   const queryParams = {
+//     lat : query.query.latitude,
+//     star: start,
+//     count: numPerPage,
+//     lng: request.query.longitude
+//   }
+
+//   superagent.get(url)
+//     .set('user-key', process.env."YELP KEY")
+//     .query(queryParams)
+//     .then(data => {
+//       console.log('data from superagent', data.body);
+
+//       const yelpArray = data.body.restaurants;
+
+//       const finalRestaurants = yelpArray.map(eatery => {
+//         return new Restaurant(eatery);
+//       })
+//     })
+
+// };
+
+
+
 //WEATHER
 app.get('/weather', (request, response) => {
   let search_query = request.query.search_query;
@@ -123,9 +220,12 @@ function Hiking(obj) {
 }
 
 
-app.get('*', (request, response) => {
-  response.status(404).send('sorry, this route does not exist');
-})
+// app.get('*', (request, response) => {
+//   response.status(404).send('sorry, this route does not exist');
+// })
+function handleNotFound(request, response){
+  response.status(404).send('this route does not exist');
+}
 
 
 // turn on the lights - move into the house - start the server
